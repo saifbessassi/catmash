@@ -1,5 +1,13 @@
 <script setup>
+import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
+import { useCatsStore } from "@/stores/cats"
+
+const catsStore = useCatsStore()
+
+onMounted(() => {
+  catsStore.getCatsList()
+})
 </script>
 
 <template>

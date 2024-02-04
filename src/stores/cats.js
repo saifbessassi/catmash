@@ -2,10 +2,12 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 export const useCatsStore = defineStore('cats', () => {
+  const isLoading = ref(false)
   const cats = ref([])
 
   function getCatsList() {
-    return fetch('https://data.latelier.co/cats.json')
+    isLoading.value = true
+    fetch('https://data.latelier.co/cats.json')
       .then(async response => {
         const rep = await response.json()
 
@@ -14,9 +16,15 @@ export const useCatsStore = defineStore('cats', () => {
           i.votes = Math.floor(Math.random() * 500)
           return i
         })
+        isLoading.value = false
       })
   }
 
-  return { cats, getCatsList }
+  function vote(catId) {
+    const catIndex = cats.value.findIndex(cat => cat.id === catId)
+    cats.value[catIndex].votes ++
+  }
+
+  return { cats, getCatsList, vote }
 
 })
